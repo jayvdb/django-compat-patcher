@@ -16,6 +16,12 @@ Intended Audience :: Information Technology
 Intended Audience :: System Administrators
 License :: OSI Approved :: MIT License
 Programming Language :: Python
+Programming Language :: Python :: 2.7
+Programming Language :: Python :: 3.4
+Programming Language :: Python :: 3.5
+Programming Language :: Python :: 3.6
+Programming Language :: Python :: 3.7
+Framework :: Django
 Topic :: Software Development :: Libraries :: Python Modules
 Operating System :: Microsoft :: Windows
 Operating System :: Unix
@@ -30,15 +36,13 @@ setup(
     author='Pascal Chambon & others',
     author_email='pythoniks@gmail.com',
     url='https://github.com/pakal/django-compat-patcher',
-    license="http://www.opensource.org/licenses/mit-license.php",
+    license='MIT',
     platforms=["any"],
     description="A monkey-patching system to ease the transition between Django versions.",
     classifiers=filter(None, classifiers.split("\n")),
     long_description=read("README.rst"),
-
-    #package_dir={'': 'src'},
     packages=packages,
-
+    tests_require=['django-contrib-comments'],
     # test_suite='your.module.tests',
 
     use_2to3=True,
