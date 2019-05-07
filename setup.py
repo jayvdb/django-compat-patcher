@@ -1,6 +1,22 @@
 #!/usr/bin/env python
 
 import sys, os
+from setuptools.command.test import test as TestCommand
+
+
+class PyTest(TestCommand):
+
+    def finalize_options(self):
+        TestCommand.finalize_options(self)
+        self.test_args = []
+        self.test_suite = True
+
+    def run_tests(self):
+        # import here, cause outside the eggs aren't loaded
+        import pytest
+        errno = pytest.main(self.test_args)
+        sys.exit(errno)
+
 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))  # security
 
@@ -42,12 +58,14 @@ setup(
     classifiers=filter(None, classifiers.split("\n")),
     long_description=read("README.rst"),
     packages=packages,
-    tests_require=['django-contrib-comments'],
-    # test_suite='your.module.tests',
 
     use_2to3=True,
     #convert_2to3_doctests=['src/your/module/README.txt'],
     #use_2to3_fixers=['your.fixers'],
     use_2to3_exclude_fixers=['lib2to3.fixes.fix_import'],
+
+    tests_require=['django-contrib-comments'],
+    test_suite='tests',
+    cmdclass={'test': PyTest},
 )
 
