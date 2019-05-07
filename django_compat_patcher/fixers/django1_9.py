@@ -230,18 +230,3 @@ def fix_deletion_contrib_sites_models_RequestSite(utils):
             super(RequestSite, self).__init__(*args, **kwargs)
 
     utils.inject_class(django.contrib.sites.models, "RequestSite", RequestSite)
-
-
-@django1_9_bc_fixer(fixer_delayed=True)
-def fix_deletion_contrib_sites_models_get_current_site(utils):
-    """Preserve contrib.sites.models.get_current_site alias."""
-    utils.skip_if_app_not_installed("django.contrib.sites")
-    import django.contrib.sites.models
-    from django.contrib.sites.shortcuts import get_current_site as real_get_current_site
-    def get_current_site(request):
-        utils.emit_warning(
-            "Please import get_current_site from django.contrib.sites.shortcuts.",
-            RemovedInDjango19Warning, stacklevel=2)
-        return real_get_current_site(request)
-
-    utils.inject_callable(django.contrib.sites.models, "get_current_site", get_current_site)
