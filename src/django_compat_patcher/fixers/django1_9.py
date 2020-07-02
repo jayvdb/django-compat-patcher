@@ -118,6 +118,17 @@ def fix_deletion_core_handlers_wsgi_WSGIRequest_REQUEST(utils):
 
 
 @django1_9_bc_fixer()
+def fix_deletion_core_cache_get_cache(utils):
+    """Preserve django.core.cache.get_cache()."""
+    from django.core import cache
+
+    def get_cache():
+        return cache.caches[cache.DEFAULT_CACHE_ALIAS]
+
+    utils.inject_callable(cache, "get_cache", get_cache)
+
+
+@django1_9_bc_fixer()
 def fix_deletion_contrib_admin_ModelAdmin_get_formsets(utils):
     """
     Preserve the get_formsets method of ModelAdmin
