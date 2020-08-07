@@ -346,6 +346,12 @@ def fix_behaviour_core_management_parser_optparse(utils):
     def create_parser(self, prog_name, subcommand, **kwargs):
         if not self.use_argparse:
             from optparse import OptionParser
+            class FlexiOptionParser(OptionParser):
+                 def add_argument(self, *args, **kwargs):
+                     warnings.warn("ArgumentParser used when OptionParser usage "
+                                   "is being simulated.",
+                                   RemovedInDjango110Warning)
+                     pass
 
             def store_as_int(option, opt_str, value, parser):
                 setattr(parser.values, option.dest, int(value))
@@ -354,9 +360,10 @@ def fix_behaviour_core_management_parser_optparse(utils):
             warnings.warn("OptionParser usage for Django management commands "
                           "is deprecated, use ArgumentParser instead",
                           RemovedInDjango110Warning)
-            parser = OptionParser(prog=prog_name,
-                                usage=self.usage(subcommand),
-                                version=self.get_version())
+            parser = FlexiOptionParser(
+                prog=prog_name,
+                usage=self.usage(subcommand),
+                version=self.get_version())
             parser.add_option('-v', '--verbosity', action='callback', dest='verbosity', default=1,
                 type='choice', choices=['0', '1', '2', '3'], callback=store_as_int,
                 help='Verbosity level; 0=minimal output, 1=normal output, 2=verbose output, 3=very verbose output')
